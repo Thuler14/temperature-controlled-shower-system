@@ -12,7 +12,7 @@ static bool sAttached = false;
 static int hotSoftMin, hotSoftMax;
 static int coldSoftMin, coldSoftMax;
 
-// Last commanded pulse widths (for logging/tests)
+// Last commanded pulse widths (for logging/validation)
 static int g_lastHot = (SERVO_HOT_MIN_US + SERVO_HOT_MAX_US) / 2;
 static int g_lastCold = (SERVO_COLD_MIN_US + SERVO_COLD_MAX_US) / 2;
 

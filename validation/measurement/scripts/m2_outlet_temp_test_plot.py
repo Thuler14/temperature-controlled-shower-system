@@ -1,7 +1,7 @@
 # ====================================================
 # M2: Outlet Temperature Test — Plot Script
 # Purpose: Visualize raw vs filtered outlet temperature
-# Data: tests/data/m2_outlet_temp_test_data.csv
+# Data: validation/measurement/data/m2_outlet_temp_test_data.csv
 # ====================================================
 
 import matplotlib.pyplot as plt
@@ -9,8 +9,8 @@ from pathlib import Path
 import pandas as pd
 
 # Path to your data file
-base_dir = Path(__file__).resolve().parents[2]
-path = base_dir / "tests" / "data" / "m2_outlet_temp_test_data.csv"
+base_dir = Path(__file__).resolve().parents[3]
+path = base_dir / "validation" / "measurement" / "data" / "m2_outlet_temp_test_data.csv"
 df = pd.read_csv(path)
 
 # Convert milliseconds → seconds

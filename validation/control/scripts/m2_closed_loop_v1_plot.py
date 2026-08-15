@@ -1,7 +1,7 @@
 # ====================================================
 # M2: Closed Loop V1 — PID Response Plot
 # Purpose: Visualize PID response (outlet vs set temperature)
-# Data: tests/data/m2_closed_loop_v1_data.csv
+# Data: validation/control/data/m2_closed_loop_v1_data.csv
 # ====================================================
 
 from pathlib import Path
@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-base_dir = Path(__file__).resolve().parents[2]
-data_path = base_dir / "tests" / "data" / "m2_closed_loop_v1_data.csv"
+base_dir = Path(__file__).resolve().parents[3]
+data_path = base_dir / "validation" / "control" / "data" / "m2_closed_loop_v1_data.csv"
 
 df = pd.read_csv(data_path)
 df["t_s"] = df["t_ms"] / 1000.0  # milliseconds → seconds

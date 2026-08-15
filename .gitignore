@@ -8,16 +8,16 @@ build/
 .pio/
 *.ino.cpp
 
-# Python (tests)
+# Python (validation)
 __pycache__/
 .venv/
 .env
 *.ipynb_checkpoints
-tests/.matplotlib/
+validation/.matplotlib/
 
 # Logs & raw data
-tests/data/*.log
-tests/data/*_raw.csv
+validation/*/data/*.log
+validation/*/data/*_raw.csv
 
 # OS / editor junk
 .DS_Store

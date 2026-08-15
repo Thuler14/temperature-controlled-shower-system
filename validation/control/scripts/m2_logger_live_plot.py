@@ -3,9 +3,9 @@
 # Purpose: Read the control ESP32 CSV logger from serial in real time
 #          and display live plots (temperatures, ratio/u, flow).
 # Usage:
-#   python3 tests/scripts/m2_logger_live_plot.py --port COM3
-#   python3 tests/scripts/m2_logger_live_plot.py --port /dev/tty.usbserial-0001
-#   python3 tests/scripts/m2_logger_live_plot.py --port /dev/tty.usbserial-0001 --window 120
+#   python3 validation/control/scripts/m2_logger_live_plot.py --port COM3
+#   python3 validation/control/scripts/m2_logger_live_plot.py --port /dev/tty.usbserial-0001
+#   python3 validation/control/scripts/m2_logger_live_plot.py --port /dev/tty.usbserial-0001 --window 120
 # Optional: --outfile to save the streamed data to disk while plotting.
 # ====================================================
 
@@ -30,8 +30,8 @@ DEFAULT_HEADER = "ms,setF,T_out_raw,T_out_filt,ratio,u,Kp,Ki,flow_lpm,link_ok"
 
 
 def parse_args() -> argparse.Namespace:
-  base_dir = Path(__file__).resolve().parents[2]
-  default_out = base_dir / "tests" / "data" / "m2_logger_live_capture.csv"
+  base_dir = Path(__file__).resolve().parents[3]
+  default_out = base_dir / "validation" / "control" / "data" / "m2_logger_live_capture.csv"
 
   p = argparse.ArgumentParser(description="Live-plot ESP32 control logger over serial.")
   p.add_argument("--port", required=True, help="Serial port (e.g. /dev/ttyUSB0)")

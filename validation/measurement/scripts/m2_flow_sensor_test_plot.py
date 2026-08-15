@@ -1,7 +1,7 @@
 # ====================================================
 # M2: Flow Sensor Test — Plot Script (Dual Y-Axis)
 # Purpose: Visualize measured flow rate (Hz → L/min)
-# Data: tests/data/m2_flow_sensor_test_data.csv
+# Data: validation/measurement/data/m2_flow_sensor_test_data.csv
 # ====================================================
 
 import matplotlib.pyplot as plt
@@ -9,8 +9,8 @@ from pathlib import Path
 import pandas as pd
 
 # Path to your data file
-base_dir = Path(__file__).resolve().parents[2]
-path = base_dir / "tests" / "data" / "m2_flow_sensor_test_data.csv"
+base_dir = Path(__file__).resolve().parents[3]
+path = base_dir / "validation" / "measurement" / "data" / "m2_flow_sensor_test_data.csv"
 df = pd.read_csv(path)
 
 # Convert milliseconds → seconds

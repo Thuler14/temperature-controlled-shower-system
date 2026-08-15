@@ -37,3 +37,4 @@ The Control firmware also performs validity, plausible-range, and rapid-change c
 - [`firmware/control/config.h`](../../firmware/control/config.h) — addresses, timing, filtering, and plausibility limits
 - [`firmware/control/temperature.cpp`](../../firmware/control/temperature.cpp) — temperature acquisition and filtering
 - [`firmware/control/control.ino`](../../firmware/control/control.ino) — control and sensor-fault handling
+- [`validation/measurement/data/m2_outlet_temp_test_data.csv`](../../validation/measurement/data/m2_outlet_temp_test_data.csv) — recorded outlet-temperature test data

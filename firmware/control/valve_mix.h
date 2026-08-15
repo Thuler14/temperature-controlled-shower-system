@@ -29,6 +29,6 @@ void valveMixCloseAll();
 //                1 → all HOT  (Hot open,  Cold closed)
 void applyMixRatio(float ratio);
 
-// Optional helpers (useful for logging/tests)
+// Optional helpers (useful for logging/validation)
 int lastColdUs();
 int lastHotUs();

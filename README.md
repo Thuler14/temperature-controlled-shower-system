@@ -43,21 +43,23 @@ The selectable setpoint is limited to **80–120°F**. This is a user-command ra
 ```text
 temperature-controlled-shower-system/
 ├── firmware/
-│   ├── common/       # Shared ESP-NOW protocol and setpoint configuration
-│   ├── control/      # Sensors, PI control, valves, flow sensing, safety logic
-│   ├── ui/           # Buttons, OLED interface, and ESP-NOW communication
-│   ├── examples/     # Milestone and subsystem test sketches
-│   └── tools/        # Sensor discovery and servo calibration tools
+│   ├── common/          # Shared ESP-NOW protocol and setpoint configuration
+│   ├── control/         # Sensors, PI control, valves, flow sensing, safety logic
+│   ├── ui/              # Buttons, OLED interface, and ESP-NOW communication
+│   ├── libraries/       # Local reusable firmware components
+│   ├── test_sketches/   # Bring-up and subsystem test firmware
+│   └── tools/           # Sensor discovery and servo calibration tools
 ├── design/
-│   ├── config/       # Subsystem configuration and implementation notes
-│   └── wiring/       # Physical wiring documentation
+│   ├── config/          # Subsystem configuration and implementation notes
+│   └── wiring/          # Physical wiring documentation
 ├── mechanical/
-│   ├── cad/          # Servo mount and valve coupler CAD
-│   └── photos/       # Assembly and wiring photos
-└── tests/
-    ├── data/         # Recorded CSV test data
-    ├── scripts/      # Logging and analysis tools
-    └── reports/      # Test plots and supporting evidence
+│   ├── cad/             # Servo mount and valve coupler CAD
+│   └── photos/          # Assembly and wiring photos
+└── validation/
+    ├── bringup/         # Hardware and peripheral bring-up evidence
+    ├── communication/   # ESP-NOW and setpoint-transfer evidence
+    ├── measurement/     # Temperature/flow data, plots, and scripts
+    └── control/         # Closed-loop data, plots, scripts, and videos
 ```
 
 See [`design/README.md`](design/README.md) for subsystem documentation and [`mechanical/README.md`](mechanical/README.md) for the mechanical design.
@@ -74,7 +76,7 @@ The Control unit can stream CSV telemetry over USB, including:
 - estimated flow;
 - communication-link status.
 
-Python scripts under [`tests/scripts/`](tests/scripts/) support live logging and offline plotting. Recorded datasets and plots are preserved under [`tests/data/`](tests/data/) and [`tests/reports/`](tests/reports/).
+Python utilities are stored with the validation area they support. Temperature and flow measurement data are under [`validation/measurement/`](validation/measurement/), while closed-loop control datasets, plots, scripts, and video evidence are under [`validation/control/`](validation/control/).
 
 ## Firmware
 

@@ -21,4 +21,4 @@ The conversion factor in the current firmware was **not experimentally calibrate
 
 - [`firmware/control/config.h`](../../firmware/control/config.h) — flow configuration
 - [`firmware/control/flow_sensor.cpp`](../../firmware/control/flow_sensor.cpp) — interrupt counting, conversion, and filtering
-- [`tests/data/m2_flow_sensor_test_data.csv`](../../tests/data/m2_flow_sensor_test_data.csv) — recorded flow-sensor test data
+- [`validation/measurement/data/m2_flow_sensor_test_data.csv`](../../validation/measurement/data/m2_flow_sensor_test_data.csv) — recorded uncalibrated flow-sensor test data

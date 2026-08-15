@@ -1,7 +1,7 @@
 # ====================================================
 # Logger CSV Plotter
-# Purpose: Batch-plot control/flow telemetry CSVs from tests/data.
-# Outputs: PNGs saved to tests/reports with the same stem as the CSV.
+# Purpose: Batch-plot control/flow telemetry CSVs from validation/control/data.
+# Outputs: PNGs saved to validation/control/plots with the same stem as the CSV.
 # ====================================================
 
 from __future__ import annotations
@@ -13,9 +13,9 @@ import matplotlib
 import pandas as pd
 
 
-BASE_DIR = Path(__file__).resolve().parents[2]
-DATA_DIR = BASE_DIR / "tests" / "data"
-REPORT_DIR = BASE_DIR / "tests" / "reports"
+BASE_DIR = Path(__file__).resolve().parents[3]
+DATA_DIR = BASE_DIR / "validation" / "control" / "data"
+PLOT_DIR = BASE_DIR / "validation" / "control" / "plots"
 DEFAULT_PATTERNS = ("setpoint_auto_*.csv", "setpoint_manual_*.csv", "setpoint_change*.csv")
 
 
@@ -24,7 +24,7 @@ def parse_args() -> argparse.Namespace:
   p.add_argument(
       "--pattern",
       action="append",
-      help="Glob pattern(s) under tests/data (default: setpoint_auto_*, setpoint_manual_*, setpoint_change*)",
+      help="Glob pattern(s) under validation/control/data (default: setpoint_auto_*, setpoint_manual_*, setpoint_change*)",
   )
   p.add_argument("--show", action="store_true", help="Show plots interactively after saving")
   return p.parse_args()
@@ -43,13 +43,13 @@ def main() -> None:
     matplotlib.use("Agg")
   import matplotlib.pyplot as plt  # type: ignore
 
-  REPORT_DIR.mkdir(parents=True, exist_ok=True)
+  PLOT_DIR.mkdir(parents=True, exist_ok=True)
   figs = []
 
   for csv_path in csv_files:
     fig = _plot_csv(csv_path, plt)
 
-    out_path = REPORT_DIR / f"{csv_path.stem}.png"
+    out_path = PLOT_DIR / f"{csv_path.stem}.png"
     fig.savefig(out_path, dpi=150, bbox_inches="tight")
 
     rel_in = csv_path.relative_to(BASE_DIR)
