@@ -1,47 +1,39 @@
-# Temperature Sensors (DS18B20) - Configuration
+# Temperature Sensors
 
-## Overview
+Three DS18B20 sensors measure the hot inlet, cold inlet, and mixed outlet temperatures on a shared OneWire bus.
 
-- The control module uses three DS18B20 digital temperature sensors connected via a shared OneWire bus.  
-- Each sensor has a unique 64-bit ROM address and is configured in [`firmware/control/config.h`](../../firmware/control/config.h).
+Each sensor is bound to its physical location using its unique ROM address.
 
----
+## Configuration
 
-## Hardware Constants 
+| Parameter                 |  Value   |
+| :------------------------ | :------: |
+| OneWire GPIO              |   `4`    |
+| Sensor resolution         | `9 bit`  |
+| Maximum conversion time   | `94 ms`  |
+| Temperature update period | `100 ms` |
+| EMA smoothing factor      |  `0.20`  |
 
-| Constant | Description | Value |
-|:--|:--|:--:|
-| `TEMP_PIN_ONEWIRE` | GPIO pin for DS18B20 data line | `4` |
-| `TEMP_HOT_ADDR` | Hot inlet sensor | `0x289DE1BA00000078` |
-| `TEMP_COLD_ADDR` | Cold inlet sensor | `0x2884B3B4000000B6` |
-| `TEMP_OUT_ADDR` | Outlet sensor | `0x284DF1BA000000C0` |
+### Sensor Addresses
 
-> Discovered using [`firmware/tools/m1_temp_scan/m1_temp_scan.ino`](../../firmware/tools/m1_temp_scan/m1_temp_scan.ino).
+| Location     | ROM Address               |
+| :----------- | :------------------------ |
+| Hot inlet    | `28 9D E1 BA 00 00 00 78` |
+| Cold inlet   | `28 84 B3 B4 00 00 00 B6` |
+| Mixed outlet | `28 4D F1 BA 00 00 00 C0` |
 
----
+The addresses were identified with [`m1_temp_scan.ino`](../../firmware/tools/m1_temp_scan/m1_temp_scan.ino).
 
-## Timing Constants
+## Implementation Notes
 
-| Constant | Description | Value |
-|:--|:--|:--:|
-| `TEMP_RESOLUTION` | DS18B20 resolution (9–12 bits) | `9` |
-| `TEMP_CONVERSION_TIME_MS` | Max conversion time for chosen resolution | `94` |
-| `TEMP_LOOP_DT_MS` | Loop interval for temperature read (ms) | `100` |
+The sensors run at 9-bit resolution so a complete conversion fits within the nominal 100 ms acquisition interval.
 
----
+An exponential moving average with `α = 0.20` smooths temperature measurements before they are used by the control loop.
 
-## Filtering Constants
+The Control firmware also performs validity, plausible-range, and rapid-change checks before allowing temperature data to drive the valves.
 
-| Constant | Description | Value |
-|:--|:--|:--:|
-| `TEMP_EMA_ALPHA` | EMA smoothing factor (τ ≈ 0.4 s @ 10 Hz) | `0.20f` |
-| `TEMP_MIN_VALID_C` | Minimum valid temperature (°C) | `-60.0f` |
-| `TEMP_MAX_VALID_C` | Maximum valid temperature (°C) | `125.0f` |
+## Related Files
 
----
-
-## Notes
-
-- ROM addresses are unique identifiers used to bind each DS18B20 to its physical position.  
-- Configuration constants apply globally to all temperature sensors unless overridden.  
-- 9-bit mode allows a full conversion within the 100 ms loop.
+- [`firmware/control/config.h`](../../firmware/control/config.h) — addresses, timing, filtering, and plausibility limits
+- [`firmware/control/temperature.cpp`](../../firmware/control/temperature.cpp) — temperature acquisition and filtering
+- [`firmware/control/control.ino`](../../firmware/control/control.ino) — control and sensor-fault handling

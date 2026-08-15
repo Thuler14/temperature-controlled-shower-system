@@ -1,9 +1,20 @@
-# Emergency Stop Button - Wiring
+# Emergency Stop Wiring
 
-Single momentary push button used to cut servo drive in firmware (active-low with internal pull-up).
+The E-stop switch is connected to the Control ESP32 as an active-low input.
 
-| Signal | ESP32 Pin | Notes |
-|:--|:--:|:--|
-| E-STOP | GPIO 33 | Input with `INPUT_PULLUP`; momentary push to GND triggers E-stop |
+## Connections
 
-Recommendation: wire the button to short the pin to GND when pressed. Keep leads short and routed away from servo power to reduce noise pickup.
+| Signal                | Connection |
+| :-------------------- | :--------- |
+| E-stop input          | GPIO 33    |
+| Other switch terminal | GND        |
+
+GPIO 33 uses the ESP32's internal pull-up, so activating the switch pulls the input low.
+
+## Wiring Notes
+
+The switch provides the physical input used by the firmware's E-stop handling.
+
+## Related Files
+
+- [`design/config/emergency_stop.md`](../config/emergency_stop.md) — E-stop behavior and configuration

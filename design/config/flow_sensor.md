@@ -1,32 +1,24 @@
-# Flow Sensor (YF-S201) - Configuration
+# Flow Sensor
 
-## Overview
+A YF-S201 Hall-effect flow sensor measures outlet-flow pulses on the Control ESP32. The firmware counts pulses using a hardware interrupt and converts the measured pulse frequency into an estimated flow rate.
 
-- The control module uses one **YF-S201** Hall-effect flow sensor to measure the total outlet flow rate.
-- The sensor outputs a digital pulse signal proportional to flow velocity, detected via an interrupt on the ESP32. 
-- Configuration constants are defined in [`firmware/control/config.h`](../../firmware/control/config.h).
+## Configuration
 
----
+| Parameter                 |        Value        |
+| :------------------------ | :-----------------: |
+| Signal GPIO               |        `21`         |
+| Measurement window        |      `500 ms`       |
+| Flow filter time constant |      `1000 ms`      |
+| Conversion factor         | `7.5` (placeholder) |
 
-## Hardware Constants
+## Implementation Notes
 
-| Constant | Description | Value |
-|:--|:--|:--:|
-| `FLOW_PIN` | GPIO used for pulse input | `21` |
+Pulse counts are captured on rising edges and evaluated over a 500 ms measurement window. Raw pulse frequency and estimated flow are then smoothed using an exponential filter.
 
----
+The conversion factor in the current firmware was **not experimentally calibrated against a known flow reference**. The resulting flow values are useful for demonstrating the sensing and logging pipeline but should not be treated as validated flow-accuracy measurements.
 
-## Measurement Constants
+## Related Files
 
-| Constant | Description | Value |
-|:--|:--|:--:|
-| `FLOW_K_PULSES_PER_ML` | K-factor — pulses per mL of water (≈7500/L) | `7.5f` |
-| `FLOW_WINDOW_MS` | Sampling window for pulse counting (ms) | `500` |
-| `FLOW_FILTER_TAU_MS` | EMA time constant for smoothing flow readings (ms) | `1000` |
-
----
-
-## Notes
-
-- The **K-factor (7.5 pulses/mL)** depends on the specific sensor and flow path and will be refined during **M3 calibration**.  
-- The current sampling window of **500 ms** balances noise reduction with responsiveness.
+- [`firmware/control/config.h`](../../firmware/control/config.h) — flow configuration
+- [`firmware/control/flow_sensor.cpp`](../../firmware/control/flow_sensor.cpp) — interrupt counting, conversion, and filtering
+- [`tests/data/m2_flow_sensor_test_data.csv`](../../tests/data/m2_flow_sensor_test_data.csv) — recorded flow-sensor test data

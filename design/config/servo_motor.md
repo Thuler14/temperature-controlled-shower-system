@@ -1,35 +1,31 @@
-# Servo Motors (MG-996R) — Configuration
+# Servo-Driven Valves
 
-## Overview
+Two MG996R servos actuate the hot and cold valves. Each valve was individually calibrated to determine the pulse widths corresponding to its mechanical open and closed positions.
 
-- Two **MG996R servo motors** are used to control the cold and hot water valves.  
-- Each servo is calibrated for fully closed and fully open positions, with pulse widths defined in [`firmware/control/config.h`](../../firmware/control/config.h).
-- The calibration ensures consistent mechanical limits and prevents overtravel.
+## Configuration
 
----
+| Parameter    | Hot Valve | Cold Valve |
+| :----------- | :-------: | :--------: |
+| ESP32 GPIO   |   `19`    |    `18`    |
+| Fully open   | `1180 µs` | `1120 µs`  |
+| Fully closed | `2080 µs` | `2080 µs`  |
 
-## Hardware Constants
+Normal mixing commands use a `15 µs` guard band inside the calibrated endpoints.
 
-| Constant | Description | Value |
-|:--|:--|:--:|
-| `SERVO_PIN_HOT` | GPIO pin for hot valve servo | `19` |
-| `SERVO_PIN_COLD` | GPIO pin for cold valve servo | `18` |
+## Implementation Notes
 
-## Calibration Constants
+A mix ratio from `0.0` to `1.0` is mapped to complementary hot/cold valve positions:
 
-| Constant | Description | Typical Value (µs) |
-|:--|:--|:--:|
-| `SERVO_HOT_MIN_US` | Hot valve — fully **open** position | `1180` |
-| `SERVO_HOT_MAX_US` | Hot valve — fully **closed** position | `2080` |
-| `SERVO_COLD_MIN_US` | Cold valve — fully **open** position | `1120` |
-| `SERVO_COLD_MAX_US` | Cold valve — fully **closed** position | `2080` |
-| `SERVO_GUARD_US` | Safety margin from mechanical stop | `15` |
+- `0.0` → cold open, hot closed;
+- `1.0` → hot open, cold closed.
 
-> Calibrated using [`firmware/tools/servo_calibration/m1_servo_calibration.ino`](../../firmware/tools/m1_servo_calibration/m1_servo_calibration.ino).
+During normal mixing, the guard band keeps commanded positions slightly away from the mechanical endpoints.
 
----
+When the controller enters its safe state, both valves are commanded directly to their calibrated closed positions.
 
-## Notes
+Calibration was performed with [`m1_servo_calibration.ino`](../../firmware/tools/m1_servo_calibration/m1_servo_calibration.ino).
 
-- Guard offsets prevent mechanical stress by reducing servo travel slightly before reaching the physical stop.
-- The calibrated limits correspond to real valve endpoints; any adjustments should be re-measured and updated in `config.h`.
+## Related Files
+
+- [`firmware/control/config.h`](../../firmware/control/config.h) — calibrated pulse widths
+- [`firmware/control/valve_mix.cpp`](../../firmware/control/valve_mix.cpp) — mix-ratio mapping and valve commands

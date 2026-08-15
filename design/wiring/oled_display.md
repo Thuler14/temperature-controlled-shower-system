@@ -1,17 +1,27 @@
-# OLED Display (SSD1309 SPI Blue) — Wiring
+# OLED Display Wiring
 
-The **128×64 px SSD1309** OLED connects via a ESP32’s **VSPI bus** using a **4-wire SPI interface** compatible with **U8g2**.
+The UI ESP32 drives a 128×64 SSD1309 OLED using hardware SPI.
 
-- **Bus type:** VSPI (SPI 4-wire + CS)
+## Connections
 
-| OLED Pin | Signal | ESP32 Pin |
-|:--|:--|:--:|
-| 1 | GND | GND |
-| 2 | VCC | 3V3 |
-| 3 | SCK | GPIO 18 |
-| 4 | SDA / MOSI | GPIO 23 |
-| 5 | RES / RST | GPIO 4 |
-| 6 | DC | GPIO 22 |
-| 7 | CS | GPIO 5 |
+| OLED Pin | Signal       | Connection |
+| :------- | :----------- | :--------- |
+| 1        | GND          | GND        |
+| 2        | VCC          | 3.3 V      |
+| 3        | SCK          | GPIO 18    |
+| 4        | MOSI         | GPIO 23    |
+| 5        | Reset        | GPIO 4     |
+| 6        | Data/Command | GPIO 22    |
+| 7        | Chip Select  | GPIO 5     |
 
-> 📷 Photo: [`mechanical/photos/m1_oled_display_wiring.jpg`](../../mechanical/photos/m1_oled_display_wiring.jpg)
+## Wiring Notes
+
+The OLED uses the ESP32 hardware SPI bus, with separate chip-select, data/command, and reset signals.
+
+## Related Files
+
+- [`design/config/oled_display.md`](../config/oled_display.md) — display configuration and behavior
+
+## Evidence
+
+![OLED display wiring](../../mechanical/photos/m1_oled_display_wiring.jpg)

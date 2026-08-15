@@ -1,61 +1,29 @@
-# ESP-NOW Communication — Configuration
+# ESP-NOW Communication
 
-## Overview
+The UI and Control ESP32s communicate directly over ESP-NOW. The final system uses fixed peer MAC addresses and a fixed Wi-Fi channel for the one-to-one wireless link.
 
-- The system uses **ESP-NOW** for direct, low-latency wireless communication between the **Control** and **UI** modules.
-- Both ESP32 boards operate in **Station (STA)** mode on a fixed Wi-Fi channel to maintain a stable one-to-one link.
-- MAC addresses and encryption keys are configured in [`firmware/config/config.h`](../../firmware/common/config.h).
+## Configuration
 
----
+| Parameter        |        Value        |
+| :--------------- | :-----------------: |
+| Wi-Fi channel    |         `6`         |
+| Control MAC      | `3C:8A:1F:80:A9:D4` |
+| UI MAC           | `8C:4F:00:35:9B:F4` |
+| Protocol version |         `1`         |
+| Encryption       |      Disabled       |
 
-## MAC Addresses
+MAC addresses were identified using [`m2_mac_scan.ino`](../../firmware/tools/m2_mac_scan/m2_mac_scan.ino).
 
-| Constant | Device | Value |
-|:--|:--|:--:|
-| `COMM_CTRL_MAC` | Control unit | `3C:8A:1F:80:A9:D4` |
-| `COMM_UI_MAC` | UI unit | `8C:4F:00:35:9B:F4` |
+## Implementation Notes
 
-> Discovered using [`firmware/tools/m2_mac_scan/m2_mac_scan.ino`](../../firmware/tools/m2_mac_scan/m2_mac_scan.ino).
+The UI sends the selected setpoint and run/stop state to the Control unit. Each packet includes a sequence number so the corresponding acknowledgment can be matched to the transmitted command.
 
----
+The Control unit returns an acknowledgment containing the latest outlet-temperature and flow values when those measurements are valid.
 
-## Communication Constants
+The communication layer also supports ESP-NOW encryption, but encryption is disabled in the final configuration.
 
-| Constant | Description | Value |
-|:--|:--|:--:|
-| `COMM_CHANNEL` | Wi-Fi channel used for both boards | `6` |
-| `COMM_USE_ENCRYPTION` | Enable/disable ESP-NOW encryption (`true`/`false`) | `false` |
+## Related Files
 
----
-
-## Encryption Keys
-
-| Constant | Description | Value |
-|:--|:--|:--:|
-| `COMM_PMK` | Primary Master Key (global) | `showerctrl_pmk16` |
-| `COMM_LMK` | Local Master Key (per-peer key) | `static_lmk_uictr` |
-
----
-
-## Protocol
-
-| Constant | Description | Value |
-|:--|:--|:--:|
-| `COMM_PROTOCOL_VERSION` | Protocol version | `1` |
-| `COMM_FLAG_ACK` | Acknowledgment bit | `1 << 0` |
-| `COMM_FLAG_RUN` | Run/Stop bit | `1 << 1` |
-| `COMM_FLAG_ERR` | Error bit | `1 << 2` |
-
----
-
-## Data Structure
-
-`COMM_Payload` defines the transmitted packet containing timestamp, sequence number, setpoint, and flag bits used for control and acknowledgment.
-
----
-
-## Notes
-- Each board uses the **other board’s MAC address** as its peer.
-  - UI → `CTRL_MAC`  
-  - Control → `UI_MAC`
-- Both must share the same **channel** and, if encryption is enabled, the **same PMK/LMK pair**.
+- [`firmware/common/config.h`](../../firmware/common/config.h) — shared protocol and peer configuration
+- [`firmware/ui/communication.cpp`](../../firmware/ui/communication.cpp) — UI sender and acknowledgment handling
+- [`firmware/control/communication.cpp`](../../firmware/control/communication.cpp) — command receiver and response handling

@@ -1,27 +1,28 @@
-# Temperature Setpoint — Configuration
+# Temperature Setpoint
 
-## Overview
+The UI allows the user to select the target outlet temperature sent to the Control ESP32. Setpoint configuration is shared between both boards.
 
-- Defines default, safety, and preset temperature values for system operation.  
-- Values are expressed in **degrees Fahrenheit (°F)**.  
-- Configuration is defined in [`firmware/ui/config.h`](../../firmware/common/config.h).
+## Configuration
 
----
+| Parameter                   |  Value   |
+| :-------------------------- | :------: |
+| Default setpoint            | `100 °F` |
+| Minimum selectable setpoint | `80 °F`  |
+| Maximum selectable setpoint | `120 °F` |
+| Default adjustment step     |  `1 °F`  |
+| Preset A                    | `98 °F`  |
+| Preset B                    | `105 °F` |
 
-## Setpoint Constants
+## Implementation Notes
 
-| Constant | Description | Value (°F) |
-|:--|:--|:--:|
-| `SETPOINT_DEFAULT_F` | Default setpoint at startup | `100.0` |
-| `SETPOINT_MIN_F` | Minimum safety limit | `80.0` |
-| `SETPOINT_MAX_F` | Maximum safety limit | `120.0` |
-| `SETPOINT_STEP_F` | Adjustment step size | `1.0` |
-| `SETPOINT_PRESET_A_F` | Preset A value | `98.0` |
-| `SETPOINT_PRESET_B_F` | Preset B value | `105.0` |
+User adjustments are constrained to the configured 80–120°F setpoint range before being transmitted to the Control unit.
 
----
+Preset A and Preset B are selected with long presses on the corresponding UI buttons.
 
-## Notes
+These values define the **allowed command range**. They should not be interpreted as independent measured-temperature safety cutoffs.
 
-- All limits are enforced in firmware to prevent unsafe temperature selection.  
-- Preset A and B provide quick access to preferred comfort temperatures.
+## Related Files
+
+- [`firmware/common/config.h`](../../firmware/common/config.h) — shared setpoint values
+- [`firmware/ui/ui.ino`](../../firmware/ui/ui.ino) — setpoint editing and presets
+- [`firmware/control/control.ino`](../../firmware/control/control.ino) — received setpoint handling

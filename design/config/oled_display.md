@@ -1,31 +1,29 @@
-# OLED Display — Configuration
+# OLED Display
 
-## Overview
+The UI uses a 128×64 SSD1309 OLED over hardware SPI. The display provides the user-facing state of the controller without requiring a serial connection.
 
-- The system uses a **128×64 px SSD1309** OLED driven over **SPI** using the **U8g2** graphics library.
-- It shows setpoint, run state, and status indicators for transmission activity.
-- Display configuration is defined in [`firmware/ui/config.h`](../../firmware/ui/config.h).
+## Configuration
 
----
+| Signal            | ESP32 GPIO |
+| :---------------- | :--------: |
+| Chip Select (CS)  |    `5`     |
+| Data/Command (DC) |    `22`    |
+| Reset (RST)       |    `4`     |
 
-## Hardware Constants
+The display is driven with U8g2 using the full-framebuffer SSD1309 hardware-SPI configuration.
 
-| Constant | Description | Value |
-|:--|:--|:--:|
-| `OLED_PIN_CS` | Chip Select (CS) | `5` |
-| `OLED_PIN_DC` | Data/Command (DC) | `22` |
-| `OLED_PIN_RST` | Reset (RST) | `4` |
+## Implementation Notes
 
----
+Depending on the current UI state, the main display value shows:
 
-## U8g2 Setup (firmware)
+- measured outlet temperature;
+- the setpoint while it is being adjusted;
+- outlet flow when the flow overlay is active.
 
-- Rotation: `U8G2_R0` (no rotation)
-- Constructor: `U8G2_SSD1309_128X64_NONAME2_F_4W_HW_SPI`
+The screen also shows run/stop state, adjustment step size, transmission count/status, and a pending indicator while a command is waiting to be sent or acknowledged.
 
----
+## Related Files
 
-## Notes
-
-- Operates on 3.3 V logic.  
-- Use full-buffer (`_F_`) U8g2 variants for stable screen refresh. 
+- [`firmware/ui/config.h`](../../firmware/ui/config.h) — display pin configuration
+- [`firmware/ui/display.cpp`](../../firmware/ui/display.cpp) — OLED rendering
+- [`firmware/ui/ui.ino`](../../firmware/ui/ui.ino) — UI state and display updates

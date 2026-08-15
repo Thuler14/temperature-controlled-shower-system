@@ -1,38 +1,41 @@
-# Push Buttons — Configuration
+# Push Buttons
 
-## Overview
+Five active-low pushbuttons provide local control of the UI. Internal ESP32 pull-ups are used, so a pressed button reads `LOW`.
 
-- Five **momentary pushbuttons** provide local user input for temperature control and preset functions.
-- Each button is connected to an **ESP32 GPIO** with **internal pull-ups enabled** (active-low).
-- Button configuration is defined in [`firmware/ui/config.h`](../../firmware/ui/config.h).
+## Configuration
 
----
+| Button | Function          | GPIO |
+| :----- | :---------------- | :--: |
+| ▲      | Increase setpoint | `25` |
+| ▼      | Decrease setpoint | `26` |
+| ●      | Run/stop control  | `27` |
+| A      | Preset A          | `14` |
+| B      | Preset B          | `13` |
 
-## Hardware Constants
+### Gesture Timing
 
-| Constant | Description | Value |
-|:--|:--|:--:|
-| `BTN_PIN_UP` | Increase setpoint (▲) | `25` |
-| `BTN_PIN_DOWN` | Decrease setpoint (▼) | `26` |
-| `BTN_PIN_OK` | Run/Stop toggle (●) | `27` |
-| `BTN_PIN_A` | Preset A | `14` |
-| `BTN_PIN_B` | Preset B | `13` |
+| Parameter           |  Value   |
+| :------------------ | :------: |
+| Debounce            | `25 ms`  |
+| Double-click window | `350 ms` |
+| Long press          | `800 ms` |
+| Repeat delay        | `500 ms` |
+| Repeat interval     | `150 ms` |
 
----
+## Implementation Notes
 
-## Timing Constant
+Up and down adjust the setpoint and support repeat events while held.
 
-| Constant | Description | Value (ms) |
-|:--|:--|:--:|
-| `BTN_DEBOUNCE_MS` | Time a level must be stable before recognized | `20` |
-| `BTN_DBLCLICK_MS` | Maximum time between two clicks | `350` |
-| `BTN_LONGPRESS_MS` | Hold duration to count as long-press | `800` |
-| `BTN_REPEAT_DELAY_MS` | Wait before first repeat event | `500` |
-| `BTN_REPEAT_MS` | Interval between repeats | `150` |
+The final UI uses long presses for the higher-impact actions:
 
----
+- long-press **A** selects Preset A;
+- long-press **B** selects Preset B;
+- long-press **●** toggles run/stop.
 
-## Notes
+This reduces the chance of accidentally changing operating state while using the interface.
 
-- Buttons are **active-low**, meaning a press reads `LOW`.
-- Presets A and B correspond to user-defined temperature shortcuts.
+## Related Files
+
+- [`firmware/ui/config.h`](../../firmware/ui/config.h) — pin and timing configuration
+- [`firmware/ui/buttons.cpp`](../../firmware/ui/buttons.cpp) — debounce and gesture detection
+- [`firmware/ui/ui.ino`](../../firmware/ui/ui.ino) — button-to-action mapping

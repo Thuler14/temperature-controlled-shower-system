@@ -1,10 +1,39 @@
-# design
-System design artifacts: block/wiring diagrams, pin maps, and configuration notes for the ESP32 control + UI units.
+# System Design
 
-## Contents
-- `wiring/` — wiring diagrams and pin tables for sensors, servos, flow sensor, E-stop, OLED, and buttons.
-- `config/` — design-time notes for ESP-NOW, PID constants, setpoint presets, and component specifics (OLED, temp sensors, flow sensor, buttons, servos).
+This directory documents the electrical connections and key subsystem configuration used in the final prototype.
 
-## Conventions
-- Keep editable sources (Draw.io/Fritzing/etc.) next to exported PNG/PDF.
-- Note any calibration values or pin swaps that need to be mirrored in `firmware/common/config.h` and `firmware/control/config.h`.
+The documentation is split into two areas:
+
+- [`config/`](config/) — subsystem behavior, firmware configuration, calibration values, and implementation notes
+- [`wiring/`](wiring/) — physical connections between the ESP32 boards, sensors, actuators, display, and controls
+
+## Configuration
+
+| Subsystem              | Documentation                                          |
+| :--------------------- | :----------------------------------------------------- |
+| PI temperature control | [`config/pid.md`](config/pid.md)                       |
+| Temperature sensors    | [`config/temp_sensor.md`](config/temp_sensor.md)       |
+| Servo-driven valves    | [`config/servo_motor.md`](config/servo_motor.md)       |
+| Flow sensing           | [`config/flow_sensor.md`](config/flow_sensor.md)       |
+| ESP-NOW communication  | [`config/esp_now.md`](config/esp_now.md)               |
+| Temperature setpoint   | [`config/setpoint.md`](config/setpoint.md)             |
+| OLED display           | [`config/oled_display.md`](config/oled_display.md)     |
+| Push buttons           | [`config/push_button.md`](config/push_button.md)       |
+| Emergency stop         | [`config/emergency_stop.md`](config/emergency_stop.md) |
+
+## Wiring
+
+| Subsystem           | Documentation                                          |
+| :------------------ | :----------------------------------------------------- |
+| Temperature sensors | [`wiring/temp_sensor.md`](wiring/temp_sensor.md)       |
+| Servo motors        | [`wiring/servo_motor.md`](wiring/servo_motor.md)       |
+| Flow sensor         | [`wiring/flow_sensor.md`](wiring/flow_sensor.md)       |
+| OLED display        | [`wiring/oled_display.md`](wiring/oled_display.md)     |
+| Push buttons        | [`wiring/push_button.md`](wiring/push_button.md)       |
+| Emergency stop      | [`wiring/emergency_stop.md`](wiring/emergency_stop.md) |
+
+Firmware configuration remains the source of truth for deployed constants and pin assignments:
+
+- [`firmware/common/config.h`](../firmware/common/config.h)
+- [`firmware/control/config.h`](../firmware/control/config.h)
+- [`firmware/ui/config.h`](../firmware/ui/config.h)
