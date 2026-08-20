@@ -4,39 +4,70 @@ ESP32-based closed-loop system that automatically mixes hot and cold water to ma
 
 Developed as a three-person NJIT ECE 416 capstone project, the prototype combines embedded control, wireless communication, temperature and flow sensing, servo-actuated valves, and a standalone user interface.
 
-## System Overview
+![Final prototype](mechanical/photos/final_system_overview.jpg)
+
+## Results at a Glance
+
+- Stable outlet-temperature regulation within approximately **±1.5°F**
+- Dual-ESP32 architecture with wireless ESP-NOW communication
+- PI closed-loop temperature control with approximately **10 Hz** control updates
+- Three-point temperature sensing at the hot inlet, cold inlet, and mixed outlet
+- Servo-actuated hot and cold mixing valves
+- CSV telemetry logging and Python-based response analysis
+- Demonstrated E-stop, communication-loss, and temperature-sensor fault handling
+
+## System Architecture
+
+![System architecture](design/diagrams/system_architecture.svg)
 
 The prototype is split across two ESP32s:
 
-- **Control unit** — reads three DS18B20 temperature sensors and a YF-S201 flow sensor, runs the PI temperature controller, drives the hot/cold valve servos, and handles safety conditions.
+- **Control unit** — reads temperature and flow sensors, runs the PI controller, drives the hot/cold valve servos, logs telemetry, and handles safety conditions.
 - **UI unit** — provides a 128×64 OLED and five-button interface for setpoint adjustment, presets, run/stop control, and system status.
-- **ESP-NOW link** — transfers setpoint and run-state commands between the UI and Control units and returns outlet-temperature and flow status.
+- **ESP-NOW link** — transfers setpoint and run-state commands to the Control unit and returns outlet-temperature and flow status.
 
-The final controller uses PI feedback with EMA-filtered temperature measurements, anti-windup, a small setpoint deadband, and output slew limiting.
+Detailed architecture, configuration, and wiring documentation is available under [`design/`](design/).
 
-## Key Features
+## Control and Safety
 
-- Dual-ESP32 embedded architecture with ESP-NOW communication
-- Three-point temperature sensing: hot inlet, cold inlet, and mixed outlet
-- PI closed-loop outlet-temperature control
-- Individually calibrated servo-driven hot and cold valves
-- EMA temperature filtering and 10 Hz control updates
-- Flow sensing and CSV data logging
-- OLED interface with adjustable setpoint, presets, and run/stop control
-- Link-loss and temperature-sensor fault handling
-- Physical E-stop switch monitored by the Control ESP32
+The final controller uses PI feedback with EMA-filtered temperature measurements, conditional integration for anti-windup, a small setpoint deadband, and output slew limiting.
 
-## Safety Behavior
+During startup, the controller estimates an initial hot/cold mixing ratio from the measured inlet temperatures and requested setpoint. Closed-loop PI regulation then adjusts the valve mixture based on outlet-temperature error.
 
-The prototype includes several firmware-level protections:
+Firmware-level protections stop normal operation and command both valves closed when the system detects:
 
-- loss of the UI communication link while running stops normal operation;
-- invalid or implausible temperature readings stop normal operation;
-- rapid temperature changes on the hot or cold lines are detected as faults;
-- activating the E-stop switch stops normal operation;
-- fault handling commands both valves closed and resets the PI controller.
+- an active E-stop;
+- loss of the UI communication link while running;
+- missing, invalid, or implausible temperature readings;
+- rapid temperature changes on the hot or cold inlet lines.
 
 The selectable setpoint is limited to **80–120°F**. This is a user-command range, not an independent measured-temperature cutoff.
+
+The E-stop is monitored by the Control ESP32 and triggers the firmware safe state; it is not an independent hardwired servo-power disconnect.
+
+## Validation
+
+Closed-loop testing was logged to CSV and analyzed with Python. Validation artifacts include raw datasets, analysis scripts, response plots, subsystem tests, safety demonstrations, and final-system video evidence.
+
+![100°F automatic-control test](validation/control/plots/setpoint_auto_100.png)
+
+Additional closed-loop plots cover multiple setpoints and setpoint-change testing under [`validation/control/plots/`](validation/control/plots/).
+
+### Final System Demo
+
+The final integrated demonstration is split into three video segments:
+
+- [Final system demo — Part 1](validation/control/videos/final_system_demo_part1.mp4)
+- [Final system demo — Part 2](validation/control/videos/final_system_demo_part2.mp4)
+- [Final system demo — Part 3](validation/control/videos/final_system_demo_part3.mp4)
+
+### Safety Demonstrations
+
+- [E-stop response](validation/control/videos/safety_estop_demo.mp4)
+- [ESP-NOW link-loss response](validation/control/videos/safety_link_loss_demo.mp4)
+- [Temperature-sensor fault response](validation/control/videos/safety_sensor_fault_demo.mp4)
+
+Flow sensing was integrated for telemetry and logging, but the flow conversion factor was not experimentally calibrated; reported flow values should therefore be treated as estimates rather than validated measurements.
 
 ## Project Structure
 
@@ -50,11 +81,12 @@ temperature-controlled-shower-system/
 │   ├── test_sketches/   # Bring-up and subsystem test firmware
 │   └── tools/           # Sensor discovery and servo calibration tools
 ├── design/
+│   ├── diagrams/        # System architecture and editable diagram source
 │   ├── config/          # Subsystem configuration and implementation notes
 │   └── wiring/          # Physical wiring documentation
 ├── mechanical/
 │   ├── cad/             # Servo mount and valve coupler CAD
-│   └── photos/          # Assembly and wiring photos
+│   └── photos/          # Assembly, mechanical-integration, and demo photos
 └── validation/
     ├── bringup/         # Hardware and peripheral bring-up evidence
     ├── communication/   # ESP-NOW and setpoint-transfer evidence
@@ -62,21 +94,7 @@ temperature-controlled-shower-system/
     └── control/         # Closed-loop data, plots, scripts, and videos
 ```
 
-See [`design/README.md`](design/README.md) for subsystem documentation and [`mechanical/README.md`](mechanical/README.md) for the mechanical design.
-
-## Data Logging and Analysis
-
-The Control unit can stream CSV telemetry over USB, including:
-
-- outlet temperature;
-- selected setpoint;
-- commanded valve ratio;
-- PI output;
-- controller gains;
-- estimated flow;
-- communication-link status.
-
-Python utilities are stored with the validation area they support. Temperature and flow measurement data are under [`validation/measurement/`](validation/measurement/), while closed-loop control datasets, plots, scripts, and video evidence are under [`validation/control/`](validation/control/).
+See [`design/README.md`](design/README.md) for system-design documentation, [`mechanical/README.md`](mechanical/README.md) for physical integration, and [`validation/README.md`](validation/README.md) for test and validation artifacts.
 
 ## Firmware
 

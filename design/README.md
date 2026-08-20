@@ -1,11 +1,19 @@
 # System Design
 
-This directory documents the electrical connections and key subsystem configuration used in the final prototype.
+This directory documents the system architecture, electrical connections, and key subsystem configuration used in the final prototype.
 
-The documentation is split into two areas:
+The documentation is split into three areas:
 
+- [`diagrams/`](diagrams/) — system-level architecture diagrams and editable sources
 - [`config/`](config/) — subsystem behavior, firmware configuration, calibration values, and implementation notes
 - [`wiring/`](wiring/) — physical connections between the ESP32 boards, sensors, actuators, display, and controls
+
+## System Architecture
+
+The system-level architecture diagram documents the dual-ESP32 structure, ESP-NOW communication, Control ESP32 inputs and outputs, safe-state behavior, and the hot/cold water path through the sensing, valve, mixing, and outlet stages.
+
+- [`system_architecture.svg`](diagrams/system_architecture.svg) — rendered architecture diagram
+- [`system_architecture.drawio`](diagrams/system_architecture.drawio) — editable draw.io source
 
 ## Configuration
 
