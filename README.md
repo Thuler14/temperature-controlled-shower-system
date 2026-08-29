@@ -53,21 +53,11 @@ Closed-loop testing was logged to CSV and analyzed with Python. Validation artif
 
 Additional closed-loop plots cover multiple setpoints and setpoint-change testing under [`validation/control/plots/`](validation/control/plots/).
 
-### Final System Demo
-
-The final integrated demonstration is split into three video segments:
-
-- [Final system demo — Part 1](validation/control/videos/final_system_demo_part1.mp4)
-- [Final system demo — Part 2](validation/control/videos/final_system_demo_part2.mp4)
-- [Final system demo — Part 3](validation/control/videos/final_system_demo_part3.mp4)
-
-### Safety Demonstrations
-
-- [E-stop response](validation/control/videos/safety_estop_demo.mp4)
-- [ESP-NOW link-loss response](validation/control/videos/safety_link_loss_demo.mp4)
-- [Temperature-sensor fault response](validation/control/videos/safety_sensor_fault_demo.mp4)
-
 Flow sensing was integrated for telemetry and logging, but the flow conversion factor was not experimentally calibrated; reported flow values should therefore be treated as estimates rather than validated measurements.
+
+### System Demonstration
+
+[Watch the complete system demonstration on YouTube](https://youtu.be/kleUfVPbYew)
 
 ## Project Structure
 
